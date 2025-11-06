@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joi-Juá - Máquinas Expendedoras Colombianas</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+
+        :root {
+            --colombia-yellow: #FCD116;
+            --colombia-blue: #003893;
+            --colombia-red: #CE1126;
+            --dark: #1a1a1a;
+            --gray: #6b7280;
+            --light-gray: #f8f9fa;
+            --white: #ffffff;
+            --cream: #fefdfb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            color: var(--dark);
+            background: var(--cream);
+            overflow-x: hidden;
+        }
+
+        /* Header minimalista */
+        header {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 1.2rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 3rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .logo-image {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+            letter-spacing: -0.5px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .logo-accent {
+            display: inline-block;
+            width: 3px;
+            height: 3px;
+            background: var(--colombia-yellow);
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.2); }
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 400;
+            font-size: 0.95rem;
+            letter-spacing: 0.3px;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--dark);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--colombia-yellow);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Slogan flotante elegante */
+        .slogan {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            color: var(--gray);
+            font-weight: 400;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            z-index: 999;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(252, 209, 22, 0.2);
+            font-style: italic;
+        }
+
+        /* Hero minimalista */
+        .hero {
+            padding: 200px 3rem 120px;
+            text-align: center;
+            margin-top: 80px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(252, 209, 22, 0.03) 0%, rgba(0, 56, 147, 0.03) 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(252, 209, 22, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 56, 147, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            transition: transform 1s ease-in-out;
+            z-index: 1;
+        }
+
+        .hero-slide {
+            min-width: 100%;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .hero-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(252, 209, 22, 0.7) 0%, 
+                rgba(0, 56, 147, 0.7) 50%, 
+                rgba(206, 17, 38, 0.7) 100%);
+            mix-blend-mode: multiply;
+            opacity: 0.5;
+            z-index: 1;
+        }
+
+        .hero-slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.85);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            color: var(--gray);
+            font-weight: 500;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            letter-spacing: 0.5px;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--colombia-yellow);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .hero h1 {
+            font-size: 3.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            font-weight: 600;
+            letter-spacing: -2px;
+            font-family: 'Playfair Display', serif;
+            line-height: 1.1;
+        }
+
+        .hero-highlight {
+            background: linear-gradient(120deg, transparent 0%, rgba(252, 209, 22, 0.3) 30%, rgba(252, 209, 22, 0.3) 70%, transparent 100%);
+            padding: 0 0.3rem;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            margin-bottom: 3rem;
+            color: var(--gray);
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            background: var(--dark);
+            color: white;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .slider-indicators {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .indicator {
+            width: 8px;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .indicator.active {
+            background: var(--colombia-yellow);
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        /* Secciones */
+        section {
+            padding: 120px 3rem;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            font-weight: 600;
+            letter-spacing: -1px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1rem;
+            color: var(--gray);
+            margin-bottom: 5rem;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        /* Servicios minimalistas */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: white;
+            padding: 3rem 2rem;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--colombia-yellow), var(--colombia-blue), var(--colombia-red));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            filter: grayscale(0.2);
+        }
+
+        .service-card h3 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .service-card p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: var(--gray);
+            font-weight: 400;
+        }
+
+        /* Productos */
+        .products {
+            background: var(--light-gray);
+        }
+
+        .product-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .product-image {
+            height: 280px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            filter: grayscale(0.1);
+        }
+
+        .product-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+        }
+
+        .product-info {
+            padding: 2rem;
+        }
+
+        .product-info h3 {
+            color: var(--dark);
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .product-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* About */
+        .about {
+            text-align: center;
+            background: white;
+        }
+
+        .about p {
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            font-size: 1.05rem;
+            color: var(--gray);
+            line-height: 1.8;
+            font-weight: 400;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-top: 5rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            position: relative;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--colombia-yellow), var(--colombia-blue), var(--colombia-red));
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            letter-spacing: -2px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        /* Contacto */
+        .contact {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+        }
+
+        .contact h2 {
+            color: white;
+        }
+
+        .contact-intro {
+            margin-bottom: 3rem;
+            font-size: 1.05rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 400;
+        }
+
+        .contact-form {
+            max-width: 500px;
+            margin: 0 auto 4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            padding: 1rem 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            font-size: 0.95rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .contact-form textarea {
+            border-radius: 20px;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: var(--colombia-yellow);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .contact-form input::placeholder,
+        .contact-form textarea::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .contact-form button {
+            background: white;
+            color: var(--dark);
+            padding: 1rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
+        }
+
+        .contact-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .social-media {
+            margin-top: 4rem;
+            padding-top: 4rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .social-media h3 {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: white;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .social-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--colombia-yellow);
+            transform: translateY(-2px);
+        }
+
+        .social-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        /* Footer minimalista */
+        footer {
+            background: #0a0a0a;
+            color: rgba(255, 255, 255, 0.4);
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        footer p {
+            margin: 0.3rem 0;
+            font-size: 0.85rem;
+            letter-spacing: 0.3px;
+        }
+
+        footer p:first-child {
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+        }
+
+        footer p:last-child {
+            margin-top: 1.5rem;
+            font-style: italic;
+            color: var(--colombia-yellow);
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                gap: 1.5rem;
+                font-size: 0.85rem;
+            }
+
+            nav {
+                padding: 0 1.5rem;
+            }
+
+            section {
+                padding: 80px 1.5rem;
+            }
+
+            .logo-text {
+                font-size: 1.2rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            .slogan {
+                font-size: 0.7rem;
+                padding: 0.6rem 1.2rem;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slogan">Sabores de mi tierra, tradición en cada rincón</div>
+    
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="Logo.jpeg" alt="tucan" class="logo-image">
+                <span class="logo-text">Joi<span class="logo-accent"></span>Juá</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#servicios">Servicios</a></li>
+                <li><a href="#productos">Productos</a></li>
+                <li><a href="#nosotros">Nosotros</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero" id="inicio">
+        <div class="hero-slider">
+            <div class="hero-slide" style="background-image: url('salento1.jpg');"></div>
+            <div class="hero-slide" style="background-image: url('peñol.png');"></div>
+            <div class="hero-slide" style="background-image: url('buga.jpg');"></div>
+            <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1534329539061-64caeb388c42?w=1600&q=80');"></div>
+            <div class="hero-slide" style="background-image: url('faro.jpg');"></div>
+        </div>
+        <script>
+        // Slider automático
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.hero-slide');
+        const indicators = document.querySelectorAll('.indicator');
+        const totalSlides = slides.length;
+
+        function goToSlide(index) {
+            currentSlide = index;
+            const slider = document.querySelector('.hero-slider');
+            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            indicators.forEach((ind, i) => {
+                ind.classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            goToSlide(currentSlide);
+        }
+
+        // Cambiar slide cada 5 segundos
+        setInterval(nextSlide, 5000);
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Animaciones al hacer scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        document.querySelectorAll('.service-card, .product-card, .stat-card').forEach((el) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+        
+        <div class="hero-content">
+            <div class="hero-badge">
+                100% Productos Colombianos
+            </div>
+            <h1>Sabores <span class="hero-highlight">auténticos</span> de Colombia</h1>
+            <p>Máquinas expendedoras con productos colombianos de la más alta calidad, disponibles 24/7</p>
+            <button class="cta-button">Solicitar cotización</button>
+        </div>
+
+        <div class="slider-indicators">
+            <div class="indicator active" onclick="goToSlide(0)"></div>
+            <div class="indicator" onclick="goToSlide(1)"></div>
+            <div class="indicator" onclick="goToSlide(2)"></div>
+            <div class="indicator" onclick="goToSlide(3)"></div>
+            <div class="indicator" onclick="goToSlide(4)"></div>
+        </div>
+    </section>
+
+    <section id="servicios">
+        <h2>Servicios</h2>
+        <p class="section-subtitle">Soluciones completas para tu empresa</p>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🚚</div>
+                <h3>Instalación</h3>
+                <p>Llevamos e instalamos las máquinas en tu empresa con toda la infraestructura necesaria.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🔧</div>
+                <h3>Mantenimiento</h3>
+                <p>Servicio técnico especializado para garantizar el funcionamiento óptimo de los equipos.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">📦</div>
+                <h3>Abastecimiento</h3>
+                <p>Reposición regular de productos frescos según las necesidades de consumo.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">💳</div>
+                <h3>Pagos modernos</h3>
+                <p>Acepta efectivo, tarjetas y pagos móviles con monitoreo en tiempo real.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="products" id="productos">
+        <h2>Productos</h2>
+        <p class="section-subtitle">Lo mejor de la gastronomía colombiana</p>
+        
+        <div class="product-showcase">
+            <div class="product-card">
+                <div class="product-image" style="background-image: url('dulces.jpg');"></div>
+                <div class="product-info">
+                    <h3>Pasabocas Tradicionales</h3>
+                    <p>Arequipe con brevas y cuajada, bocadillo veleño, postre de natas, dulce de leche y guayaba.</p>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image" style="background-image: url('arepas.jpg');"></div>
+                <div class="product-info">
+                    <h3>Comida caliente</h3>
+                    <p>Mini arepas rellenas, tamalitos, changua en vaso, empanadas de cambray y mazamorra.</p>
+                </div>
+            </div>
+
+           
+
+            <div class="product-card">
+                <div class="product-image" style="background-image: url('cafe.png');"></div>
+                <div class="product-info">
+                    <h3>Bebidas calientes</h3>
+                    <p>Café negro, café con leche, capuchino, mocaccino, latte, nescafé y chocolate caliente.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about" id="nosotros">
+        <h2>Nosotros</h2>
+        <p class="section-subtitle">Tradición colombiana al alcance de todos</p>
+        <p>
+            Somos una empresa colombiana dedicada a llevar los sabores más auténticos de nuestro país a cada rincón, de forma práctica, innovadora y al alcance de todos. A través de nuestras máquinas expendedoras inteligentes, ofrecemos una variedad de productos típicos de diferentes regiones de Colombia.
+        </p>
+        <p>
+            Nuestro propósito es promover la cultura y tradición colombiana, apoyando a pequeños productores locales mientras brindamos una experiencia única que conecta sabor, tecnología y orgullo por lo nuestro.
+        </p>
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">300+</div>
+                <div class="stat-label">Máquinas activas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">150+</div>
+                <div class="stat-label">Clientes satisfechos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">10+</div>
+                <div class="stat-label">Años de experiencia</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Colombiano</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contacto">
+        <h2>Contacto</h2>
+        <p class="contact-intro">¿Listo para llevar productos colombianos a tu empresa?</p>
+        <form class="contact-form" onsubmit="event.preventDefault(); alert('Gracias por tu interés. Nos comunicaremos contigo pronto.');">
+            <input type="text" placeholder="Nombre completo" required>
+            <input type="email" placeholder="Correo electrónico" required>
+            <input type="tel" placeholder="WhatsApp" required>
+            <input type="text" placeholder="Ciudad" required>
+            <textarea rows="4" placeholder="Cuéntanos qué necesitas" required></textarea>
+            <button type="submit">Enviar solicitud</button>
+        </form>
+
+        <div class="social-media">
+            <h3>Síguenos</h3>
+            <div class="social-links">
+                <a href="https://www.facebook.com/joijuacolombia" target="_blank" class="social-link">
+                    <span class="social-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
